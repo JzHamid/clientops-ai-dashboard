@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ClientOps AI Dashboard
 
-## Getting Started
+A polished SaaS-style admin dashboard for client operations, project delivery,
+task tracking, and future AI automation workflows. This is a portfolio project
+for Jazhem Hamid, built to showcase clean frontend implementation, reusable
+components, and practical admin-system thinking.
 
-First, run the development server:
+## Features
+
+- Dark, responsive single-page SaaS dashboard
+- Sidebar navigation and command-style header
+- Overview metrics for clients, projects, tasks, and automation readiness
+- Client and project tracker table with statuses, priorities, and health scores
+- Project pipeline view across discovery, build, review, and launch
+- Task/status board for current operational work
+- Client context notes panel
+- AI automation readiness panel using mock data only
+- Recent activity feed
+
+## Tech Stack
+
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- Mock data in `lib/mock-data.ts`
+
+## Run Locally
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Build for production:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Current Scope
 
-## Learn More
+This MVP intentionally uses mock data only. It does not include authentication,
+Supabase, OpenAI API calls, external API calls, real client data, or secrets.
 
-To learn more about Next.js, take a look at the following resources:
+## Future Improvements
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Add Supabase-backed clients, projects, and task records
+- Add authentication and role-based dashboard access
+- Add AI-assisted summaries, triage, and risk detection
+- Add charts for revenue, utilization, and delivery velocity
+- Add filtering, search, and detail pages for clients and projects
