@@ -6,9 +6,10 @@ type HeaderProps = {
     owner: string;
   };
   actions: string[];
+  children?: React.ReactNode;
 };
 
-export function Header({ summary, actions }: HeaderProps) {
+export function Header({ summary, actions, children }: HeaderProps) {
   return (
     <header className="border-b border-white/10 bg-[#08090d]/85 backdrop-blur">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-6 sm:px-6 lg:px-8 xl:flex-row xl:items-center xl:justify-between">
@@ -43,6 +44,7 @@ export function Header({ summary, actions }: HeaderProps) {
               {action}
             </button>
           ))}
+          {children}
         </div>
       </div>
     </header>

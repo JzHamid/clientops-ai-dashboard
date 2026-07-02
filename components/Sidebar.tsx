@@ -15,7 +15,7 @@ export function Sidebar() {
         </div>
 
         <div className="hidden rounded-md border border-emerald-400/20 bg-emerald-400/10 px-2 py-1 text-xs font-medium text-emerald-200 sm:block lg:mt-6 lg:inline-block">
-          Mock data
+          Supabase-ready
         </div>
       </div>
 
@@ -47,8 +47,8 @@ export function Sidebar() {
         </p>
         <p className="mt-3 text-sm font-medium text-white">Portfolio build</p>
         <p className="mt-2 text-sm leading-6 text-zinc-400">
-          Single-page SaaS admin UI with mock client, project, and automation
-          data.
+          Full-stack SaaS admin UI with authenticated client, project, task,
+          notes, and summary workflows.
         </p>
       </div>
     </aside>
