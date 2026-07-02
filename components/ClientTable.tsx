@@ -75,7 +75,7 @@ export function ClientTable({ clients, projects }: ClientTableProps) {
           </h2>
         </div>
         <p className="text-sm text-zinc-400">
-          Real account records scoped by Supabase RLS.
+          Secure records for this signed-in workspace.
         </p>
       </div>
 

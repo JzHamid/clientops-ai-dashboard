@@ -7,8 +7,8 @@ dark, premium dashboard.
 
 The project is built to show practical full-stack product work: authenticated
 workflows, protected Supabase data access, Row Level Security, CRUD forms,
-server actions, Zod validation, empty states, demo seeding, and a server-side AI
-summary flow with a safe fallback.
+server actions, Zod validation, empty states, demo seeding, and an AI-style
+summary preview flow with a polished demo preview when no provider is configured.
 
 ## Portfolio Highlights
 
@@ -18,7 +18,7 @@ summary flow with a safe fallback.
 - Full CRUD for clients, projects, tasks, and project notes
 - Server-side validation and server-derived `user_id`
 - Supabase RLS policies documented in SQL
-- AI automation readiness without exposing API keys to the browser
+- AI-style automation readiness without exposing provider keys to the browser
 - Responsive dark SaaS UI designed for admin and operations workflows
 
 ## Features
@@ -30,7 +30,7 @@ summary flow with a safe fallback.
 - Project notes: add, view, edit, and delete notes for project context
 - Portfolio demo seed button for an empty workspace
 - Activity timeline for important account, project, task, note, and summary events
-- Server-side "Generate AI Summary" workflow with a safe demo fallback
+- AI-style summary preview workflow with a safe demo preview path
 - Zod validation for all form inputs
 - Dark responsive SaaS dashboard UI with loading, empty, success, and error states
 - Destructive actions use confirmation prompts before delete requests are sent
@@ -46,7 +46,7 @@ summary flow with a safe fallback.
 7. Review the seeded clients, project pipeline, task board, notes, activity feed,
    and saved AI summaries.
 8. Create, edit, update status, and delete a client, project, task, and note.
-9. Click **Generate AI summary** on a project and confirm the summary is saved.
+9. Click **Generate AI summary** on a project and confirm the summary preview is saved.
 10. Try a destructive delete and confirm the browser prompt appears first.
 
 ## Tech Stack
@@ -81,7 +81,6 @@ the signed-in user's own records.
 - Do not expose Supabase service role keys.
 - The browser only uses `NEXT_PUBLIC_SUPABASE_URL` and
   `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
-- `OPENAI_API_KEY` is reserved for future server-side AI only.
 - Server actions derive `user_id` from the authenticated Supabase session.
 - Forms never submit `user_id`.
 - RLS must stay enabled in Supabase.
@@ -105,6 +104,12 @@ Fill in the Supabase browser-safe values.
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
+
+Optional server-only AI provider key for future real-provider summaries:
+
+```bash
+OPENAI_API_KEY=
 ```
 
 Start the development server.
@@ -132,19 +137,20 @@ npm run build
 
 When a signed-in user has no records yet, the dashboard shows a **Load demo
 workspace** button. It creates realistic sample clients, projects, tasks, notes,
-AI summaries, and activity logs for the current authenticated user. The client
-does not submit `user_id`; the server action derives it from the Supabase
-session, and the action refuses to seed duplicate demo data once records exist.
+demo summary previews, and activity logs for the current authenticated user.
+The client does not submit `user_id`; the server action derives it from the
+Supabase session, and the action refuses to seed duplicate demo data once
+records exist.
 
-## AI Summary Behavior
+## AI-Style Summary Preview
 
 The summary action runs on the server and gathers project status, tasks, notes,
-and recent activity. If `OPENAI_API_KEY` is missing, it saves a clear demo
-summary fallback instead of crashing. No AI key is exposed to the browser.
+and recent activity. If no real provider is configured, it saves a clear demo
+summary preview instead of crashing. No provider key is exposed to the browser.
 
 ## Future Improvements
 
-- Replace demo summary logic with a real server-side OpenAI call
+- Connect the summary preview flow to a real server-side AI provider
 - Add filters and search across clients, projects, and tasks
 - Add client and project detail pages
 - Add charts for revenue, health, delivery velocity, and risk

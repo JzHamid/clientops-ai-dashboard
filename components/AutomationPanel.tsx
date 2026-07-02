@@ -143,7 +143,7 @@ export function AutomationPanel({
           Project summary previews
         </h2>
         <p className="mt-2 text-sm leading-6 text-zinc-400">
-          Generates server-side summaries from project tasks, notes, and activity.
+          Creates project summary previews from tasks, notes, and recent activity.
         </p>
       </div>
 

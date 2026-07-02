@@ -159,7 +159,7 @@ export async function generateAiSummary(formData: FormData) {
     refreshDashboard(
       process.env.OPENAI_API_KEY
         ? "AI summary preview generated."
-        : "Demo summary saved. This portfolio demo uses a safe server-side fallback when no AI provider key is configured.",
+        : "Demo summary saved. This portfolio demo uses a safe preview mode for summary generation.",
     );
   } catch (error) {
     if (isRedirectError(error)) {
