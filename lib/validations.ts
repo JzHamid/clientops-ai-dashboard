@@ -61,6 +61,21 @@ export const noteSchema = z.object({
   note_type: z.enum(["Update", "Risk", "Decision", "Client context"]),
 });
 
+export const aiSummarySchema = z.object({
+  project_id: idSchema,
+  summary: z.string().trim().min(10).max(1600),
+  risk_level: z.enum(["Low", "Medium", "High"]),
+  recommended_next_steps: z.array(z.string().trim().min(3).max(220)).min(1).max(5),
+  suggested_follow_up_message: z.string().trim().min(10).max(1000),
+});
+
+export const activityLogSchema = z.object({
+  client_id: idSchema.nullable().optional(),
+  project_id: idSchema.nullable().optional(),
+  action: z.string().trim().min(2).max(80),
+  detail: z.string().trim().min(5).max(500),
+});
+
 export const projectStatusSchema = z.object({
   id: idSchema,
   status: projectSchema.shape.status,

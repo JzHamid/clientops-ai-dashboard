@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { ActivityFeed } from "@/components/ActivityFeed";
 import { AutomationPanel } from "@/components/AutomationPanel";
 import { ClientTable } from "@/components/ClientTable";
+import { DemoWorkspacePanel } from "@/components/DemoWorkspacePanel";
 import { Header } from "@/components/Header";
 import { LogoutButton } from "@/components/LogoutButton";
 import { MetricCard } from "@/components/MetricCard";
@@ -83,6 +84,14 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   }
 
   const metrics = buildMetrics(data);
+  const isEmptyWorkspace =
+    supabaseReady &&
+    data.clients.length === 0 &&
+    data.projects.length === 0 &&
+    data.tasks.length === 0 &&
+    data.notes.length === 0 &&
+    data.summaries.length === 0 &&
+    data.activity.length === 0;
 
   return (
     <div className="min-h-screen bg-[#08090d] text-zinc-100 lg:flex">
@@ -121,6 +130,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               {error}
             </section>
           ))}
+
+          {isEmptyWorkspace ? <DemoWorkspacePanel /> : null}
 
           <section
             aria-label="Overview metrics"
