@@ -23,7 +23,7 @@ export async function addProjectNote(formData: FormData) {
       .single();
 
     if (error) {
-      dashboardRedirect("error", "Unable to add note.");
+      dashboardRedirect("error", "Project note could not be added. Check the selected project and note content.");
     }
 
     if (data) {
@@ -45,7 +45,51 @@ export async function addProjectNote(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to add note.");
+    dashboardRedirect("error", "Project note could not be added. Check the selected project and note content.");
+  }
+}
+
+const updateNoteSchema = noteSchema.extend({
+  id: idSchema,
+});
+
+export async function updateProjectNote(formData: FormData) {
+  try {
+    const values = parseFormData(updateNoteSchema, formData);
+    const { id, ...note } = values;
+    const { supabase, user } = await requireUser();
+    const { data, error } = await supabase
+      .from("project_notes")
+      .update(note)
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .select("id, title, project_id")
+      .single();
+
+    if (error) {
+      dashboardRedirect("error", "Project note changes could not be saved. Check the form and try again.");
+    }
+
+    if (data) {
+      await logActivity(supabase, {
+        userId: user.id,
+        projectId: data.project_id,
+        action: "updated",
+        detail: `Updated note ${data.title}.`,
+      });
+    }
+
+    refreshDashboard("Project note changes saved.");
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
+    if (error instanceof ZodError) {
+      dashboardRedirect("error", validationMessage(error));
+    }
+
+    dashboardRedirect("error", "Project note changes could not be saved. Check the form and try again.");
   }
 }
 
@@ -60,7 +104,7 @@ export async function deleteProjectNote(formData: FormData) {
       .eq("user_id", user.id);
 
     if (error) {
-      dashboardRedirect("error", "Unable to delete note.");
+      dashboardRedirect("error", "Project note could not be deleted. Refresh and try again.");
     }
 
     refreshDashboard("Project note deleted.");
@@ -73,6 +117,6 @@ export async function deleteProjectNote(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to delete note.");
+    dashboardRedirect("error", "Project note could not be deleted. Refresh and try again.");
   }
 }

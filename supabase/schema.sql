@@ -359,7 +359,25 @@ with check (
 create policy "Users can update own activity logs"
 on public.activity_logs for update to authenticated
 using ((select auth.uid()) = user_id)
-with check ((select auth.uid()) = user_id);
+with check (
+  (select auth.uid()) = user_id
+  and (
+    client_id is null
+    or exists (
+      select 1 from public.clients
+      where clients.id = activity_logs.client_id
+      and clients.user_id = (select auth.uid())
+    )
+  )
+  and (
+    project_id is null
+    or exists (
+      select 1 from public.projects
+      where projects.id = activity_logs.project_id
+      and projects.user_id = (select auth.uid())
+    )
+  )
+);
 
 create policy "Users can delete own activity logs"
 on public.activity_logs for delete to authenticated

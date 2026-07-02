@@ -1,4 +1,4 @@
-import type { BadgeTone } from "@/lib/mock-data";
+import type { BadgeTone } from "@/lib/ui-config";
 
 const toneClasses: Record<BadgeTone, string> = {
   cyan: "border-cyan-400/25 bg-cyan-400/10 text-cyan-200",

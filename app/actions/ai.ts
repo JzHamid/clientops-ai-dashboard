@@ -21,7 +21,6 @@ type SummaryProject = {
   name: string;
   status: string;
   priority: string;
-  progress: number;
   description: string | null;
   client_id: string;
   clients?: { name: string } | { name: string }[] | null;
@@ -51,13 +50,13 @@ export async function generateAiSummary(formData: FormData) {
 
     const { data: project, error: projectError } = await supabase
       .from("projects")
-      .select("id, name, status, priority, progress, description, client_id, clients(name)")
+      .select("id, name, status, priority, description, client_id, clients(name)")
       .eq("id", project_id)
       .eq("user_id", user.id)
       .single();
 
     if (projectError || !project) {
-      dashboardRedirect("error", "Unable to load that project for summary generation.");
+      dashboardRedirect("error", "That project could not be loaded for summary generation.");
     }
 
     const [tasksResult, notesResult, activityResult] = await Promise.all([
@@ -91,6 +90,9 @@ export async function generateAiSummary(formData: FormData) {
     const highPriorityTasks = tasks.filter((task) => task.priority === "High");
     const riskNotes = notes.filter((note) => note.note_type === "Risk");
     const openTasks = tasks.filter((task) => task.status !== "Done");
+    const doneTasks = tasks.filter((task) => task.status === "Done");
+    const taskCompletion =
+      tasks.length === 0 ? 0 : Math.round((doneTasks.length / tasks.length) * 100);
     const riskLevel =
       summaryProject.status === "Blocked" || blockedTasks.length > 0 || riskNotes.length > 1
         ? "High"
@@ -98,16 +100,16 @@ export async function generateAiSummary(formData: FormData) {
           ? "Medium"
           : "Low";
 
-    const demoPrefix = process.env.OPENAI_API_KEY
-      ? "Server-side summary preview"
-      : "Demo AI summary fallback";
+    const summaryPrefix = process.env.OPENAI_API_KEY
+      ? "AI summary preview"
+      : "Demo summary preview";
     const clientName = Array.isArray(summaryProject.clients)
       ? summaryProject.clients[0]?.name
       : summaryProject.clients?.name;
 
-    const summary = `${demoPrefix}: ${summaryProject.name} for ${
+    const summary = `${summaryPrefix}: ${summaryProject.name} for ${
       clientName ?? "the client"
-    } is currently in ${summaryProject.status} with ${summaryProject.progress}% progress. There are ${
+    } is currently in ${summaryProject.status} with ${taskCompletion}% task completion. There are ${
       openTasks.length
     } open tasks, ${blockedTasks.length} blocked tasks, and ${
       notes.length
@@ -141,7 +143,7 @@ export async function generateAiSummary(formData: FormData) {
     });
 
     if (insertError) {
-      dashboardRedirect("error", "Unable to save AI summary.");
+      dashboardRedirect("error", "AI summary could not be saved. Refresh and try again.");
     }
 
     await logActivity(supabase, {
@@ -157,7 +159,7 @@ export async function generateAiSummary(formData: FormData) {
     refreshDashboard(
       process.env.OPENAI_API_KEY
         ? "AI summary preview generated."
-        : "Demo AI summary generated because OPENAI_API_KEY is not configured.",
+        : "Demo summary saved. This portfolio demo uses a safe server-side fallback when no AI provider key is configured.",
     );
   } catch (error) {
     if (isRedirectError(error)) {
@@ -168,6 +170,6 @@ export async function generateAiSummary(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to generate AI summary.");
+    dashboardRedirect("error", "AI summary could not be generated. Refresh and try again.");
   }
 }

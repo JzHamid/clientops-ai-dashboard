@@ -1,7 +1,8 @@
 import { deleteClientRecord } from "@/app/actions/clients";
+import { ConfirmSubmitButton } from "@/components/forms/ConfirmSubmitButton";
 import { ClientForm } from "@/components/forms/ClientForm";
 import { StatusBadge } from "@/components/StatusBadge";
-import type { BadgeTone } from "@/lib/mock-data";
+import type { BadgeTone } from "@/lib/ui-config";
 import type { ClientRecord, ProjectRecord } from "@/lib/types";
 
 type ClientTableProps = {
@@ -60,7 +61,10 @@ export function ClientTable({ clients, projects }: ClientTableProps) {
   });
 
   return (
-    <section className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-2xl shadow-black/20">
+    <section
+      id="clients"
+      className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] shadow-2xl shadow-black/20"
+    >
       <div className="flex flex-col gap-2 border-b border-white/10 px-5 py-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-emerald-300">
@@ -78,7 +82,7 @@ export function ClientTable({ clients, projects }: ClientTableProps) {
       <div className="border-b border-white/10 p-4">
         <details className="rounded-lg border border-white/10 bg-[#0d1017] p-4">
           <summary className="cursor-pointer text-sm font-semibold text-white">
-            Create client
+            Add client
           </summary>
           <div className="mt-4">
             <ClientForm />
@@ -88,13 +92,17 @@ export function ClientTable({ clients, projects }: ClientTableProps) {
 
       {clients.length === 0 ? (
         <div className="p-8 text-center">
-          <p className="text-sm font-medium text-white">No clients yet</p>
-          <p className="mt-2 text-sm text-zinc-500">
-            Create your first client to unlock projects, tasks, notes, and summaries.
+          <p className="text-sm font-semibold text-white">No clients yet</p>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-500">
+            Add a client manually or use the demo workspace above to populate a
+            realistic portfolio walkthrough in one click.
           </p>
         </div>
       ) : (
         <div className="overflow-x-auto">
+          <p className="px-5 pt-4 text-xs text-zinc-500 sm:hidden">
+            Scroll sideways to view all account details and actions.
+          </p>
           <table className="min-w-[900px] w-full border-collapse text-left text-sm">
             <thead className="bg-white/[0.025] text-xs uppercase tracking-[0.14em] text-zinc-500">
               <tr>
@@ -102,7 +110,12 @@ export function ClientTable({ clients, projects }: ClientTableProps) {
                 <th className="px-5 py-3 font-medium">Latest project</th>
                 <th className="px-5 py-3 font-medium">Status</th>
                 <th className="px-5 py-3 font-medium">Priority</th>
-                <th className="px-5 py-3 font-medium">Health</th>
+                <th
+                  className="px-5 py-3 font-medium"
+                  title="Manual account health score set on the client record."
+                >
+                  Health score
+                </th>
                 <th className="px-5 py-3 font-medium">Projects</th>
                 <th className="px-5 py-3 font-medium">Actions</th>
               </tr>
@@ -161,12 +174,12 @@ export function ClientTable({ clients, projects }: ClientTableProps) {
                       </details>
                       <form action={deleteClientRecord}>
                         <input name="id" type="hidden" value={client.id} />
-                        <button
+                        <ConfirmSubmitButton
                           className="h-9 rounded-lg border border-rose-400/20 bg-rose-400/10 px-3 text-xs font-medium text-rose-100 transition hover:bg-rose-400/15"
-                          type="submit"
+                          confirmMessage={`Delete ${client.name}? This will also remove related projects, tasks, notes, and summaries.`}
                         >
                           Delete client
-                        </button>
+                        </ConfirmSubmitButton>
                       </form>
                     </div>
                   </td>

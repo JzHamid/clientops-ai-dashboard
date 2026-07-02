@@ -37,7 +37,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
         {!supabaseReady ? (
           <div className="mt-5 rounded-lg border border-amber-400/25 bg-amber-400/10 p-3 text-sm text-amber-100">
-            Add Supabase values to `.env.local` to enable authentication.
+            Connect Supabase locally to enable authentication.
           </div>
         ) : null}
 

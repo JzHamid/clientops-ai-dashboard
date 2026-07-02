@@ -1,3 +1,5 @@
+import type { HeaderAction } from "@/lib/ui-config";
+
 type HeaderProps = {
   summary: {
     eyebrow: string;
@@ -5,7 +7,7 @@ type HeaderProps = {
     description: string;
     owner: string;
   };
-  actions: string[];
+  actions: HeaderAction[];
   children?: React.ReactNode;
 };
 
@@ -30,19 +32,19 @@ export function Header({ summary, actions, children }: HeaderProps) {
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
           {actions.map((action, index) => (
-            <button
-              key={action}
-              className={`h-10 rounded-lg border px-4 text-sm font-medium transition ${
+            <a
+              key={action.label}
+              className={`inline-flex h-10 w-full items-center justify-center rounded-lg border px-4 text-sm font-medium transition sm:w-auto ${
                 index === 0
                   ? "border-cyan-300/40 bg-cyan-300 text-zinc-950 hover:bg-cyan-200"
                   : "border-white/10 bg-white/[0.04] text-zinc-200 hover:bg-white/[0.08]"
               }`}
-              type="button"
+              href={action.href}
             >
-              {action}
-            </button>
+              {action.label}
+            </a>
           ))}
           {children}
         </div>

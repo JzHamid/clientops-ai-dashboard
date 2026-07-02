@@ -27,7 +27,7 @@ export async function createClientRecord(formData: FormData) {
       .single();
 
     if (error) {
-      dashboardRedirect("error", "Unable to create client.");
+      dashboardRedirect("error", "Client could not be created. Check the form and try again.");
     }
 
     if (data) {
@@ -39,7 +39,7 @@ export async function createClientRecord(formData: FormData) {
       });
     }
 
-    refreshDashboard("Client created.");
+    refreshDashboard("Client added. You can attach a project next.");
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
@@ -49,7 +49,7 @@ export async function createClientRecord(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to create client.");
+    dashboardRedirect("error", "Client could not be created. Check the form and try again.");
   }
 }
 
@@ -67,7 +67,7 @@ export async function updateClientRecord(formData: FormData) {
       .single();
 
     if (error) {
-      dashboardRedirect("error", "Unable to update client.");
+      dashboardRedirect("error", "Client changes could not be saved. Check the form and try again.");
     }
 
     if (data) {
@@ -79,7 +79,7 @@ export async function updateClientRecord(formData: FormData) {
       });
     }
 
-    refreshDashboard("Client updated.");
+    refreshDashboard("Client changes saved.");
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
@@ -89,7 +89,7 @@ export async function updateClientRecord(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to update client.");
+    dashboardRedirect("error", "Client changes could not be saved. Check the form and try again.");
   }
 }
 
@@ -104,7 +104,7 @@ export async function deleteClientRecord(formData: FormData) {
       .eq("user_id", user.id);
 
     if (error) {
-      dashboardRedirect("error", "Unable to delete client.");
+      dashboardRedirect("error", "Client could not be deleted. Refresh and try again.");
     }
 
     refreshDashboard("Client deleted.");
@@ -117,6 +117,6 @@ export async function deleteClientRecord(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to delete client.");
+    dashboardRedirect("error", "Client could not be deleted. Refresh and try again.");
   }
 }

@@ -28,7 +28,7 @@ export async function createProject(formData: FormData) {
       .single();
 
     if (error) {
-      dashboardRedirect("error", "Unable to create project.");
+      dashboardRedirect("error", "Project could not be created. Check the client and required fields.");
     }
 
     if (data) {
@@ -41,7 +41,7 @@ export async function createProject(formData: FormData) {
       });
     }
 
-    refreshDashboard("Project created.");
+    refreshDashboard("Project added. Add tasks or notes to build context.");
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
@@ -51,7 +51,52 @@ export async function createProject(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to create project.");
+    dashboardRedirect("error", "Project could not be created. Check the client and required fields.");
+  }
+}
+
+const updateProjectSchema = projectSchema.extend({
+  id: idSchema,
+});
+
+export async function updateProject(formData: FormData) {
+  try {
+    const values = parseFormData(updateProjectSchema, formData);
+    const { id, ...project } = values;
+    const { supabase, user } = await requireUser();
+    const { data, error } = await supabase
+      .from("projects")
+      .update(project)
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .select("id, name, client_id")
+      .single();
+
+    if (error) {
+      dashboardRedirect("error", "Project changes could not be saved. Check the form and try again.");
+    }
+
+    if (data) {
+      await logActivity(supabase, {
+        userId: user.id,
+        clientId: data.client_id,
+        projectId: data.id,
+        action: "updated",
+        detail: `Updated project ${data.name}.`,
+      });
+    }
+
+    refreshDashboard("Project changes saved.");
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
+    if (error instanceof ZodError) {
+      dashboardRedirect("error", validationMessage(error));
+    }
+
+    dashboardRedirect("error", "Project changes could not be saved. Check the form and try again.");
   }
 }
 
@@ -68,7 +113,7 @@ export async function updateProjectStatus(formData: FormData) {
       .single();
 
     if (error) {
-      dashboardRedirect("error", "Unable to update project status.");
+      dashboardRedirect("error", "Project status could not be updated. Refresh and try again.");
     }
 
     if (data) {
@@ -91,7 +136,7 @@ export async function updateProjectStatus(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to update project status.");
+    dashboardRedirect("error", "Project status could not be updated. Refresh and try again.");
   }
 }
 
@@ -106,7 +151,7 @@ export async function deleteProject(formData: FormData) {
       .eq("user_id", user.id);
 
     if (error) {
-      dashboardRedirect("error", "Unable to delete project.");
+      dashboardRedirect("error", "Project could not be deleted. Refresh and try again.");
     }
 
     refreshDashboard("Project deleted.");
@@ -119,6 +164,6 @@ export async function deleteProject(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to delete project.");
+    dashboardRedirect("error", "Project could not be deleted. Refresh and try again.");
   }
 }

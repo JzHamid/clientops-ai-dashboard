@@ -23,7 +23,7 @@ export async function createTask(formData: FormData) {
       .single();
 
     if (error) {
-      dashboardRedirect("error", "Unable to create task.");
+      dashboardRedirect("error", "Task could not be created. Check the selected project and required fields.");
     }
 
     if (data) {
@@ -35,7 +35,7 @@ export async function createTask(formData: FormData) {
       });
     }
 
-    refreshDashboard("Task created.");
+    refreshDashboard("Task added to the status board.");
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
@@ -45,7 +45,51 @@ export async function createTask(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to create task.");
+    dashboardRedirect("error", "Task could not be created. Check the selected project and required fields.");
+  }
+}
+
+const updateTaskSchema = taskSchema.extend({
+  id: idSchema,
+});
+
+export async function updateTask(formData: FormData) {
+  try {
+    const values = parseFormData(updateTaskSchema, formData);
+    const { id, ...task } = values;
+    const { supabase, user } = await requireUser();
+    const { data, error } = await supabase
+      .from("tasks")
+      .update(task)
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .select("id, title, project_id")
+      .single();
+
+    if (error) {
+      dashboardRedirect("error", "Task changes could not be saved. Check the form and try again.");
+    }
+
+    if (data) {
+      await logActivity(supabase, {
+        userId: user.id,
+        projectId: data.project_id,
+        action: "updated",
+        detail: `Updated task ${data.title}.`,
+      });
+    }
+
+    refreshDashboard("Task changes saved.");
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
+    if (error instanceof ZodError) {
+      dashboardRedirect("error", validationMessage(error));
+    }
+
+    dashboardRedirect("error", "Task changes could not be saved. Check the form and try again.");
   }
 }
 
@@ -62,7 +106,7 @@ export async function updateTaskStatus(formData: FormData) {
       .single();
 
     if (error) {
-      dashboardRedirect("error", "Unable to update task status.");
+      dashboardRedirect("error", "Task status could not be updated. Refresh and try again.");
     }
 
     if (data) {
@@ -84,7 +128,7 @@ export async function updateTaskStatus(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to update task status.");
+    dashboardRedirect("error", "Task status could not be updated. Refresh and try again.");
   }
 }
 
@@ -99,7 +143,7 @@ export async function deleteTask(formData: FormData) {
       .eq("user_id", user.id);
 
     if (error) {
-      dashboardRedirect("error", "Unable to delete task.");
+      dashboardRedirect("error", "Task could not be deleted. Refresh and try again.");
     }
 
     refreshDashboard("Task deleted.");
@@ -112,6 +156,6 @@ export async function deleteTask(formData: FormData) {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to delete task.");
+    dashboardRedirect("error", "Task could not be deleted. Refresh and try again.");
   }
 }

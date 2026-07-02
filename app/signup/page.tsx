@@ -38,7 +38,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
 
         {!supabaseReady ? (
           <div className="mt-5 rounded-lg border border-amber-400/25 bg-amber-400/10 p-3 text-sm text-amber-100">
-            Add Supabase values to `.env.local` to enable signup.
+            Connect Supabase locally to enable signup.
           </div>
         ) : null}
 

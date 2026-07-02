@@ -18,6 +18,11 @@ export function ClientForm({ client }: ClientFormProps) {
       className="grid gap-3 sm:grid-cols-2"
     >
       {client ? <input name="id" type="hidden" value={client.id} /> : null}
+      <p className="text-xs leading-5 text-zinc-500 sm:col-span-2">
+        {isEditing
+          ? "Update account health, priority, and contact details."
+          : "Add the account first, then attach projects, tasks, and notes."}
+      </p>
 
       <label className="grid gap-1">
         <span className="text-xs font-medium text-zinc-400">Client name</span>
@@ -81,6 +86,9 @@ export function ClientForm({ client }: ClientFormProps) {
           name="health_score"
           type="number"
         />
+        <span className="text-xs leading-5 text-zinc-500">
+          Manual 0-100 account health score.
+        </span>
       </label>
 
       <div className="sm:col-span-2">
@@ -88,7 +96,7 @@ export function ClientForm({ client }: ClientFormProps) {
           className="h-10 rounded-lg border border-cyan-300/40 bg-cyan-300 px-4 text-sm font-semibold text-zinc-950 transition hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-60"
           pendingLabel={isEditing ? "Saving..." : "Creating..."}
         >
-          {isEditing ? "Save client" : "Create client"}
+          {isEditing ? "Save client changes" : "Add client"}
         </SubmitButton>
       </div>
     </form>

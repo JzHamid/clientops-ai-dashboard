@@ -212,7 +212,7 @@ async function workspaceHasRecords(
   const hasError = results.some((result) => result.error);
 
   if (hasError) {
-    dashboardRedirect("error", "Unable to verify whether the workspace is empty.");
+    dashboardRedirect("error", "Workspace could not be checked before loading demo data.");
   }
 
   return results.some((result) => (result.count ?? 0) > 0);
@@ -224,7 +224,7 @@ export async function loadDemoWorkspace() {
     const hasRecords = await workspaceHasRecords(supabase, user.id);
 
     if (hasRecords) {
-      dashboardRedirect("error", "Demo workspace can only be loaded into an empty account.");
+      dashboardRedirect("error", "Demo workspace can only be loaded before you add your own records.");
     }
 
     const clientsToInsert = demoClients.map((client) => ({
@@ -238,7 +238,7 @@ export async function loadDemoWorkspace() {
       .select("id, name");
 
     if (clientsError || !clients || clients.length !== demoClients.length) {
-      dashboardRedirect("error", "Unable to create demo clients.");
+      dashboardRedirect("error", "Demo clients could not be created. Refresh and try again.");
     }
 
     const clientsByName = recordByName(clients);
@@ -270,7 +270,7 @@ export async function loadDemoWorkspace() {
       .select("id, name, client_id, status, progress");
 
     if (projectsError || !projects || projects.length !== demoProjects.length) {
-      dashboardRedirect("error", "Unable to create demo projects.");
+      dashboardRedirect("error", "Demo projects could not be created. Refresh and try again.");
     }
 
     const projectsByName = recordByName(projects);
@@ -297,7 +297,7 @@ export async function loadDemoWorkspace() {
     const { error: tasksError } = await supabase.from("tasks").insert(tasksToInsert);
 
     if (tasksError) {
-      dashboardRedirect("error", "Unable to create demo tasks.");
+      dashboardRedirect("error", "Demo tasks could not be created. Refresh and try again.");
     }
 
     const notesToInsert = demoNotes.map((note) => {
@@ -321,7 +321,7 @@ export async function loadDemoWorkspace() {
     const { error: notesError } = await supabase.from("project_notes").insert(notesToInsert);
 
     if (notesError) {
-      dashboardRedirect("error", "Unable to create demo project notes.");
+      dashboardRedirect("error", "Demo project notes could not be created. Refresh and try again.");
     }
 
     const portalProject = projectsByName.get("Client portal rebuild");
@@ -335,7 +335,7 @@ export async function loadDemoWorkspace() {
       aiSummarySchema.parse({
         project_id: portalProject.id,
         summary:
-          "Demo AI summary fallback: Client portal rebuild is progressing well in Build with strong client alignment. The most important next step is closing QA notes and confirming the timeline copy.",
+          "Demo summary preview: Client portal rebuild is progressing well in Build with strong client alignment. The most important next step is closing QA notes and confirming the timeline copy.",
         risk_level: "Medium",
         recommended_next_steps: [
           "Finish portal navigation QA notes.",
@@ -348,7 +348,7 @@ export async function loadDemoWorkspace() {
       aiSummarySchema.parse({
         project_id: cleanupProject.id,
         summary:
-          "Demo AI summary fallback: Admin system cleanup is blocked by shared drive permissions. The project needs a client ownership decision before cleanup work can safely continue.",
+          "Demo summary preview: Admin system cleanup is blocked by shared drive permissions. The project needs a client ownership decision before cleanup work can safely continue.",
         risk_level: "High",
         recommended_next_steps: [
           "Confirm the shared drive permission owner.",
@@ -365,7 +365,7 @@ export async function loadDemoWorkspace() {
       .insert(summariesToInsert);
 
     if (summariesError) {
-      dashboardRedirect("error", "Unable to create demo summaries.");
+      dashboardRedirect("error", "Demo summaries could not be created. Refresh and try again.");
     }
 
     const northstar = clientsByName.get("Northstar Studio");
@@ -410,10 +410,10 @@ export async function loadDemoWorkspace() {
       .insert(activityToInsert);
 
     if (activityError) {
-      dashboardRedirect("error", "Unable to create demo activity logs.");
+      dashboardRedirect("error", "Demo activity logs could not be created. Refresh and try again.");
     }
 
-    refreshDashboard("Demo workspace loaded.");
+    refreshDashboard("Demo workspace loaded. Review the seeded clients, tasks, notes, and summaries.");
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
@@ -423,6 +423,6 @@ export async function loadDemoWorkspace() {
       dashboardRedirect("error", validationMessage(error));
     }
 
-    dashboardRedirect("error", "Unable to load demo workspace.");
+    dashboardRedirect("error", "Demo workspace could not be loaded. Refresh and try again.");
   }
 }

@@ -1,4 +1,4 @@
-import type { BadgeTone, Metric } from "@/lib/mock-data";
+import type { BadgeTone, Metric } from "@/lib/ui-config";
 
 const accentClasses: Record<BadgeTone, string> = {
   cyan: "bg-cyan-300",

@@ -1,5 +1,5 @@
-import type { BadgeTone } from "@/lib/mock-data";
 import type { ActivityLogRecord } from "@/lib/types";
+import type { BadgeTone } from "@/lib/ui-config";
 
 type ActivityFeedProps = {
   activity: ActivityLogRecord[];
@@ -32,7 +32,10 @@ function dotTone(action: string): BadgeTone {
 
 export function ActivityFeed({ activity }: ActivityFeedProps) {
   return (
-    <section className="rounded-lg border border-white/10 bg-white/[0.035] shadow-2xl shadow-black/20">
+    <section
+      id="activity"
+      className="rounded-lg border border-white/10 bg-white/[0.035] shadow-2xl shadow-black/20"
+    >
       <div className="border-b border-white/10 px-5 py-4">
         <p className="text-xs font-medium uppercase tracking-[0.18em] text-cyan-300">
           Timeline
@@ -42,9 +45,10 @@ export function ActivityFeed({ activity }: ActivityFeedProps) {
 
       {activity.length === 0 ? (
         <div className="p-6 text-center">
-          <p className="text-sm font-medium text-white">No activity yet</p>
-          <p className="mt-2 text-sm text-zinc-500">
-            Create records and updates to build a timeline.
+          <p className="text-sm font-semibold text-white">No activity yet</p>
+          <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-zinc-500">
+            Create, edit, or summarize records to build an audit-style timeline
+            of workspace activity.
           </p>
         </div>
       ) : (

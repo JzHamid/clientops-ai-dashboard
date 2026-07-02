@@ -1,4 +1,4 @@
-import { navItems } from "@/lib/mock-data";
+import { navItems } from "@/lib/ui-config";
 
 export function Sidebar() {
   return (
@@ -15,7 +15,7 @@ export function Sidebar() {
         </div>
 
         <div className="hidden rounded-md border border-emerald-400/20 bg-emerald-400/10 px-2 py-1 text-xs font-medium text-emerald-200 sm:block lg:mt-6 lg:inline-block">
-          Supabase-ready
+          Full-stack demo
         </div>
       </div>
 
@@ -26,7 +26,7 @@ export function Sidebar() {
         {navItems.map((item) => (
           <a
             key={item.label}
-            href="#"
+            href={item.href}
             className={`flex min-w-fit items-center justify-between rounded-lg border px-3 py-2 text-sm transition ${
               item.active
                 ? "border-cyan-400/30 bg-cyan-400/10 text-white"

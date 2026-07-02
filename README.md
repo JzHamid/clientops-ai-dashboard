@@ -1,22 +1,53 @@
 # ClientOps AI Dashboard
 
-ClientOps AI Dashboard is a portfolio-ready SaaS-style admin system for managing
-clients, projects, tasks, project notes, and AI-style project summary previews.
-It keeps a dark premium dashboard look while demonstrating full-stack product
-patterns: authentication, protected data access, form validation, Row Level
-Security, CRUD workflows, and server-side summary generation.
+ClientOps AI Dashboard is a portfolio-ready SaaS admin system for client
+operations teams. It lets a signed-in user manage clients, projects, tasks,
+project notes, activity history, and AI-style project summary previews from one
+dark, premium dashboard.
+
+The project is built to show practical full-stack product work: authenticated
+workflows, protected Supabase data access, Row Level Security, CRUD forms,
+server actions, Zod validation, empty states, demo seeding, and a server-side AI
+summary flow with a safe fallback.
+
+## Portfolio Highlights
+
+- Real app experience instead of a static landing page
+- Authenticated dashboard with user-scoped data
+- Recruiter-friendly demo seed flow for instant walkthroughs
+- Full CRUD for clients, projects, tasks, and project notes
+- Server-side validation and server-derived `user_id`
+- Supabase RLS policies documented in SQL
+- AI automation readiness without exposing API keys to the browser
+- Responsive dark SaaS UI designed for admin and operations workflows
 
 ## Features
 
 - Supabase Auth with `/login`, `/signup`, logout, and protected `/dashboard`
 - Client CRUD: create, edit, and delete client accounts
-- Project CRUD: create projects, update project status, and delete projects
-- Task CRUD: create tasks, update task status, and delete tasks
-- Project notes: add, view, and delete notes for project context
+- Project CRUD: create, edit, update status, and delete projects
+- Task CRUD: create, edit, update status, and delete tasks
+- Project notes: add, view, edit, and delete notes for project context
+- Portfolio demo seed button for an empty workspace
 - Activity timeline for important account, project, task, note, and summary events
 - Server-side "Generate AI Summary" workflow with a safe demo fallback
 - Zod validation for all form inputs
 - Dark responsive SaaS dashboard UI with loading, empty, success, and error states
+- Destructive actions use confirmation prompts before delete requests are sent
+
+## How To Test The Demo
+
+1. Create a Supabase project and run `supabase/schema.sql` in the SQL editor.
+2. Copy `.env.example` to `.env.local`.
+3. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+4. Run `npm install`, then `npm run dev`.
+5. Open the app, create an account, and go to the protected dashboard.
+6. Click **Load demo workspace** in the empty state.
+7. Review the seeded clients, project pipeline, task board, notes, activity feed,
+   and saved AI summaries.
+8. Create, edit, update status, and delete a client, project, task, and note.
+9. Click **Generate AI summary** on a project and confirm the summary is saved.
+10. Try a destructive delete and confirm the browser prompt appears first.
 
 ## Tech Stack
 
@@ -57,32 +88,32 @@ the signed-in user's own records.
 
 ## Run Locally
 
-Install dependencies:
+Install dependencies.
 
 ```bash
 npm install
 ```
 
-Copy the example environment file:
+Copy the example environment file.
 
 ```bash
 copy .env.example .env.local
 ```
 
-Fill in:
+Fill in the Supabase browser-safe values.
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ```
 
-Start the development server:
+Start the development server.
 
 ```bash
 npm run dev
 ```
 
-Build for production:
+Build for production.
 
 ```bash
 npm run build
@@ -96,6 +127,14 @@ npm run build
 4. In Supabase Auth settings, enable email/password auth.
 5. Add your project URL and anon key to `.env.local`.
 6. Restart the Next.js dev server.
+
+## Demo Workspace
+
+When a signed-in user has no records yet, the dashboard shows a **Load demo
+workspace** button. It creates realistic sample clients, projects, tasks, notes,
+AI summaries, and activity logs for the current authenticated user. The client
+does not submit `user_id`; the server action derives it from the Supabase
+session, and the action refuses to seed duplicate demo data once records exist.
 
 ## AI Summary Behavior
 
